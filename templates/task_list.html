@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block link %}
+<!-- Custom Stylesheet -->
+<link rel="stylesheet" href="{% static 'css/task_list.css' %}">
+{% endblock link %}
+
+{% block content %}
+<main class="tasks-main">
+  <div class="container tasks-container">
+
+    <!-- Page Header -->
+    <section class="page-header-card">
+      <h1 class="page-main-title">All Tasks</h1>
+      <p class="page-sub-headline">Manage, organize and track all your tasks in one place.</p>
+    </section>
+
+    <!-- Top Action Bar -->
+    <section class="top-action-bar">
+
+
+      <form method="GET" class="search-input-wrapper">
+        <svg class="search-magnifier-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input name="search" type="text" placeholder="Search tasks..." class="search-field-input"
+          aria-label="Search tasks">
+      </form>
+      <button class="btn btn-primary btn-add-task" onclick="window.location.href='{% url 'add_task' %}'">
+        <svg class="plus-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        <span>Add New Task</span>
+      </button>
+    </section>
+
+    <!-- Filter Section -->
+    <section class="filter-section-panel">
+      <div class="filter-grid-wrapper">
+
+        <!-- Status Filters -->
+        <div class="filter-group">
+          <span class="filter-group-label">Status:</span>
+
+          <div class="filter-pills-row">
+
+            <a href="{% url 'task_list' %}" class="filter-pill {% if not request.GET.status %}active{% endif %}">
+              All
+            </a>
+
+            <a href="?status=pending" class="filter-pill {% if request.GET.status == 'pending' %}active{% endif %}">
+              Pending
+            </a>
+
+            <a href="?status=completed" class="filter-pill {% if request.GET.status == 'completed' %}active{% endif %}">
+              Completed
+            </a>
+
+            <a href="?status=overdue" class="filter-pill {% if request.GET.status == 'overdue' %}active{% endif %}">
+              Overdue
+            </a>
+
+          </div>
+        </div>
+
+        <!-- Priority Filters -->
+        <div class="filter-group">
+          <span class="filter-group-label">Priority:</span>
+
+          <div class="filter-pills-row">
+
+            <a href="?priority=low"
+              class="filter-pill label-low {% if request.GET.priority == 'low' %}active{% endif %}">
+              Low
+            </a>
+
+            <a href="?priority=high"
+              class="filter-pill label-high {% if request.GET.priority == 'high' %}active{% endif %}">
+              High
+            </a>
+
+          </div>
+        </div>
+
+        <!-- Date Filters -->
+        <div class="filter-group">
+          <span class="filter-group-label">Date:</span>
+
+          <div class="filter-pills-row">
+
+            <a href="?date=today" class="filter-pill {% if request.GET.date == 'today' %}active{% endif %}">
+              Today
+            </a>
+
+            <a href="?date=upcoming" class="filter-pill {% if request.GET.date == 'upcoming' %}active{% endif %}">
+              Upcoming
+            </a>
+
+            <a href="?date=overdue" class="filter-pill {% if request.GET.date == 'overdue' %}active{% endif %}">
+              Overdue
+            </a>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Task List Grid (Desktop 3-column / Mobile 1-column) -->
+    <section class="task-list-section">
+      <div class="task-grid-container">
+
+        <!-- Task Card 1: DSA Practice -->
+        {% for task in pending_tasks %}
+        <div class="task-grid-card border-left-high">
+          <div class="card-main-content">
+            <div class="card-top-row">
+              <div class="task-card-badge icon-books">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                </svg>
+              </div>
+              <div class="badge-status-tags">
+                <span class="prio-tag tag-high">{{task.priority}}</span>
+                <span class="status-tag status-pending">{{task.status}}</span>
+              </div>
+            </div>
+
+            <h3 class="task-card-title">{{task.title}}</h3>
+            <div class="task-schedule-row">
+              <svg class="schedule-clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              <span class="schedule-text">Today - {{task.due_time}}</span>
+            </div>
+          </div>
+
+          <!-- Card Actions -->
+          <div class="card-action-buttons">
+            <a href="{% url 'edit_task' task.id %}" class="btn btn-outline btn-act-edit">Edit</a>
+            <a href="{% url 'complete_task' task.id %}" class="btn btn-success-solid btn-act-complete">Complete</a>
+            <a href="{% url 'delete_task' task.id %}" class="btn btn-danger-outline btn-act-delete">Delete</a>
+          </div>
+        </div>
+        {% endfor %}
+
+
+        <!-- Task Card 3: Database Assignment (Red Warning Style) -->
+        {% for task in overdue_tasks %}
+        <div class="task-grid-card border-left-red overdue-warning-style">
+          <div class="card-main-content">
+            <div class="card-top-row">
+              <div class="task-card-badge icon-warning">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
+                  </path>
+                  <line x1="12" y1="9" x2="12" y2="13"></line>
+                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+              </div>
+              <div class="badge-status-tags">
+                <span class="prio-tag tag-high">{{task.priority}}</span>
+                <span class="status-tag status-overdue">{{task.status}}⚠️</span>
+              </div>
+            </div>
+
+            <h3 class="task-card-title">{{task.title}}</h3>
+            <div class="task-schedule-row text-danger-color">
+              <svg class="schedule-clock-icon text-danger-color" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              <span class="schedule-text">Yesterday - {{task.due_time}}</span>
+            </div>
+          </div>
+
+          <!-- Overdue Special Action Buttons -->
+          <div class="overdue-action-wrapper">
+            <a href="{% url 'complete_task' task.id %}" class="btn btn-danger-solid btn-act-complete-now">Complete
+              Now</a>
+            <a href="{% url 'delete_task' task.id %}" class="btn btn-danger-outline btn-act-delete">Delete</a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
+  </div>
+</main>
+{% endblock content %}
+
+{% block script %}
+<!-- Drawer Toggle Scripts -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggle = document.getElementById('mobile-toggle');
+    const navLinks = document.getElementById('nav-links');
+
+    toggle.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      toggle.classList.toggle('active');
+    });
+
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 20) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+  });
+</script>
+</body>
+
+</html>
+{% endblock script %}

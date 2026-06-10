@@ -1,0 +1,150 @@
+{% extends "public_base.html" %}
+{% load static %}
+
+{% block link %}
+<!-- Custom Stylesheet -->
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock link %}
+
+
+{% block main_content %}{
+<main>
+  <!-- Login Split Screen Layout -->
+  <section class="login-section">
+    <div class="container login-container">
+
+      <!-- Left Side: Brand Context -->
+      <div class="login-brand-info">
+        <h1 class="login-headline">Welcome Back to <br><span class="text-gradient">FocusBell</span></h1>
+        <p class="login-description">
+          Login to manage your tasks, alarms, and reminders. Continue building unbreakable execution consistency.
+        </p>
+
+        <!-- Small feature list -->
+        <ul class="feature-ticks-list">
+          <li class="feature-tick-item">
+            <div class="tick-badge">
+              <svg class="tick-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <span class="tick-text">Continue your tasks</span>
+          </li>
+          <li class="feature-tick-item">
+            <div class="tick-badge">
+              <svg class="tick-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <span class="tick-text">Check today’s alarms</span>
+          </li>
+          <li class="feature-tick-item">
+            <div class="tick-badge">
+              <svg class="tick-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <span class="tick-text">Track your productivity</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Right Side: Login Form Card -->
+      <div class="login-form-wrapper">
+        <div class="login-card">
+          <div class="card-glow"></div>
+          <div class="card-header">
+            <h2 class="card-headline">Welcome Back</h2>
+            <p class="card-subheadline">Enter your credentials to access your workspace.</p>
+          </div>
+
+
+          {% if messages %}
+          {% for message in messages %}
+          <div class="alert alert-danger">
+            {{ message }}
+          </div>
+          {% endfor %}
+          {% endif %}
+
+          <!-- Login Form -->
+          <form action="#" method="POST" class="login-form" id="login-form">
+            {% csrf_token %}
+            <!-- Email Address or Username -->
+            <div class="input-group">
+              <label for="identity" class="input-label">Email Address or Username</label>
+              <div class="input-wrapper">
+                <input type="text" id="identify" name="identify" class="form-input"
+                  placeholder="you@example.com or username" required autocomplete="username">
+              </div>
+            </div>
+
+            <!-- Password & Forgot Password Split Label -->
+            <div class="input-group">
+              <div class="label-wrapper-flex">
+                <label for="password" class="input-label">Password</label>
+                <a href="{% url "forget_password" %}" class="forgot-link">Forgot Password?</a>
+              </div>
+              <div class="input-wrapper">
+                <input type="password" id="password" name="password" class="form-input" placeholder="••••••••" required
+                  autocomplete="current-password">
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary btn-submit">Login</button>
+
+            <!-- Register Redirect Link -->
+            <div class="redirect-wrapper">
+              <span class="redirect-text">Don't have an account?</span>
+              <a href="{% url 'register_page'%}" class="redirect-link">Create Account</a>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+{% endblock main_content %}
+
+{% block script %}
+<!-- Light Javascript for Mobile Hamburger Drawer Trigger & Navigation Smoothness -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggle = document.getElementById('mobile-toggle');
+    const navLinks = document.getElementById('nav-links');
+
+    // Open / Close Drawer
+    toggle.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      toggle.classList.toggle('active');
+    });
+
+    // Close drawer on link click
+    const items = document.querySelectorAll('.nav-item, .nav-auth .btn');
+    items.forEach(item => {
+      item.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+        toggle.classList.remove('active');
+      });
+    });
+
+    // Sticky Header effect on scroll
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 20) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+  });
+</script>
+</body>
+
+</html>
+{% endblock script %}

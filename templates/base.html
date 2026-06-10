@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - FocusBell</title>
+  <meta name="description" content="Manage your tasks, check active alarms, and view productivity metrics in your FocusBell workspace.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+
+  {% block link %}
+  
+  
+  {% endblock link %}
+
+  </head>
+<body>
+
+  <!-- Header / Navigation -->
+  <header class="navbar" id="navbar">
+    <div class="container navbar-container">
+      <a href="index.html#home" class="logo">
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 8C18 6.4087 17.3679 4.88258 16.2426 3.75736C15.1174 2.63214 13.5913 2 12 2C10.4087 2 8.88258 2.63214 7.75736 3.75736C6.63214 4.88258 6 6.4087 6 8C6 15 3 17 3 17H21C21 17 18 15 18 8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M13.73 21C13.5239 21.3571 13.2281 21.6536 12.8716 21.8603C12.5151 22.0671 12.1084 22.1762 11.695 22.1762C11.2816 22.1762 10.8749 22.0671 10.5184 21.8603C10.1619 21.6536 9.86609 21.3571 9.66 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="logo-text">FocusBell</span>
+      </a>
+
+      <!-- Mobile Hamburger Button -->
+      <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle navigation">
+        <svg class="hamburger-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="4" y1="12" x2="20" y2="12"></line>
+          <line x1="4" y1="6" x2="20" y2="6"></line>
+          <line x1="4" y1="18" x2="20" y2="18"></line>
+        </svg>
+      </button>
+
+      <!-- Nav Links -->
+      <nav class="nav-links" id="nav-links">
+        <a href="{% url 'dashboard' %}" class="nav-item active">Dashboard</a>
+        <a href="{% url 'task_list' %}" class="nav-item">Tasks</a>
+        <a href="{% url 'add_task' %}" class="nav-item">Add Task</a>
+        
+        <!-- Utility controls -->
+        <div class="nav-utilities">
+          <button class="utility-btn notification-bell" aria-label="Notifications">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8C18 6.4087 17.3679 4.88258 16.2426 3.75736C15.1174 2.63214 13.5913 2 12 2C10.4087 2 8.88258 2.63214 7.75736 3.75736C6.63214 4.88258 6 6.4087 6 8C6 15 3 17 3 17H21C21 17 18 15 18 8Z"></path>
+              <path d="M13.73 21C13.5239 21.3571 13.2281 21.6536 12.8716 21.8603C12.5151 22.0671 12.1084 22.1762 11.695 22.1762C11.2816 22.1762 10.8749 22.0671 10.5184 21.8603C10.1619 21.6536 9.86609 21.3571 9.66 21"></path>
+            </svg>
+            <span class="active-badge-dot"></span>
+          </button>
+          <a href="{% url 'profile' %}"><div class="user-avatar" title="Rudraksh Kushwah">
+            <span>{{ request.user.username|first|upper }}</span>
+          </div></a>
+          
+          
+          <a href="{% url 'logout_page' %}" class="btn btn-outline btn-logout">Logout</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+{% block content %}
+
+{% endblock content %}
+
+  <!-- Clean Minimalist Footer -->
+<footer class="dashboard-footer">
+    <div class="container footer-bottom">
+        <p class="copyright-text">
+            &copy; 2026 FocusBell. All rights reserved.
+        </p>
+
+        <p class="developer-text">
+            Developed by <strong>Rudraksh Kushwah</strong>
+        </p>
+    </div>
+</footer>
+
+  {% block script %}
+  
+  
+
+  {% endblock script %}
+
+  

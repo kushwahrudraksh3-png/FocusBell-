@@ -1,0 +1,181 @@
+{% extends "public_base.html" %}
+{% load static %}
+
+{% block link %}
+<!-- Custom Stylesheet -->
+<link rel="stylesheet" href="{% static 'css/register.css' %}">
+{% endblock link %}
+
+{% block main_content %}
+<main>
+  <!-- Register Split Screen Layout -->
+  <section class="register-section">
+    <div class="container register-container">
+
+      <!-- Left Side: Brand Context -->
+      <div class="register-brand-info">
+        <h1 class="register-headline">Create Your <br><span class="text-gradient">FocusBell Account</span></h1>
+        <p class="register-description">
+          Start managing your tasks with smart alarms and reminders. Join thousands of high performers completing their
+          priorities daily.
+        </p>
+
+        <!-- Small feature list -->
+        <ul class="feature-ticks-list">
+          <li class="feature-tick-item">
+            <div class="tick-badge">
+              <svg class="tick-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <span class="tick-text">Smart Alarms</span>
+          </li>
+          <li class="feature-tick-item">
+            <div class="tick-badge">
+              <svg class="tick-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <span class="tick-text">Email Reminders</span>
+          </li>
+          <li class="feature-tick-item">
+            <div class="tick-badge">
+              <svg class="tick-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <span class="tick-text">Productivity Tracking</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Right Side: Registration Form Card -->
+      <div class="register-form-wrapper">
+        <div class="register-card">
+          <div class="card-glow"></div>
+          <div class="card-header">
+            <h2 class="card-headline">Get Started</h2>
+            <p class="card-subheadline">Fill in your details to set up your workspace.</p>
+          </div>
+
+          {% if messages %}
+          {% for message in messages %}
+          <div class="alert alert-danger">
+            {{ message }}
+          </div>
+          {% endfor %}
+          {% endif %}
+
+          <!-- Registration Form -->
+          <form action="#" method="POST" class="register-form" id="register-form">
+            {% csrf_token %}
+            <!-- Username -->
+            <div class="input-group">
+              <label for="username" class="input-label">Username</label>
+              <div class="input-wrapper">
+                <input type="text" id="username" name="username" class="form-input" placeholder="e.g. sarah_connor"
+                  required autocomplete="username">
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label for="first_name" class="input-label">First Name</label>
+              <div class="input-wrapper">
+                <input type="text" id="first_name" name="first_name" class="form-input" placeholder="e.g. sarah_connor"
+                  required autocomplete="username">
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label for="last_name" class="input-label">Last Name</label>
+              <div class="input-wrapper">
+                <input type="text" id="last_name" name="last_name" class="form-input" placeholder="e.g. sarah_connor"
+                  required autocomplete="username">
+              </div>
+            </div>
+
+            <!-- Email Address -->
+            <div class="input-group">
+              <label for="email" class="input-label">Email Address</label>
+              <div class="input-wrapper">
+                <input type="email" id="email" name="email" class="form-input" placeholder="you@example.com" required
+                  autocomplete="email">
+              </div>
+            </div>
+
+            <!-- Password -->
+            <div class="input-group">
+              <label for="password" class="input-label">Password</label>
+              <div class="input-wrapper">
+                <input type="password" id="password" name="password" class="form-input" placeholder="••••••••" required
+                  autocomplete="new-password">
+              </div>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="input-group">
+              <label for="confirm-password" class="input-label">Confirm Password</label>
+              <div class="input-wrapper">
+                <input type="password" id="confirm-password" name="confirm-password" class="form-input"
+                  placeholder="••••••••" required autocomplete="new-password">
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary btn-submit">Create Account</button>
+
+            <!-- Login Redirect Link -->
+            <div class="redirect-wrapper">
+              <span class="redirect-text">Already have an account?</span>
+              <a href="{% url 'login_page' %}" class="redirect-link">Login</a>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+{% endblock main_content %}
+
+
+{% block script %}
+<!-- Light Javascript for Mobile Hamburger Drawer Trigger & Navigation Smoothness -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggle = document.getElementById('mobile-toggle');
+    const navLinks = document.getElementById('nav-links');
+
+    // Open / Close Drawer
+    toggle.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      toggle.classList.toggle('active');
+    });
+
+    // Close drawer on link click
+    const items = document.querySelectorAll('.nav-item, .nav-auth .btn');
+    items.forEach(item => {
+      item.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+        toggle.classList.remove('active');
+      });
+    });
+
+    // Sticky Header effect on scroll
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 20) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+  });
+</script>
+</body>
+
+</html>
+{% endblock script %}

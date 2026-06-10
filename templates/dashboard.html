@@ -1,0 +1,269 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block link %}
+<!-- Custom Stylesheet -->
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock link %}
+
+
+{% block content %}
+<main class="dashboard-main">
+  <div class="container dashboard-container">
+
+    <!-- Welcome Header Section -->
+    <section class="welcome-header">
+      <h1 class="welcome-headline">Hello, {{request.user.first_name}}👋</h1>
+      <p class="welcome-subheadline">You have <span class="text-highlight">{{today_pending_tasks}} pending tasks</span>
+        today.</p>
+    </section>
+
+    <!-- Stats Cards Grid -->
+    <section class="stats-grid">
+      <!-- Stat Card 1 -->
+      <div class="stat-card">
+        <div class="stat-badge stat-badge-blue">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <line x1="8" y1="6" x2="21" y2="6"></line>
+            <line x1="8" y1="12" x2="21" y2="12"></line>
+            <line x1="8" y1="18" x2="21" y2="18"></line>
+            <line x1="3" y1="6" x2="3.01" y2="6"></line>
+            <line x1="3" y1="12" x2="3.01" y2="12"></line>
+            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <span class="stat-label">Total Tasks</span>
+          <span class="stat-value">{{total_tasks}}</span>
+        </div>
+      </div>
+
+      <!-- Stat Card 2 -->
+      <div class="stat-card">
+        <div class="stat-badge stat-badge-amber">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <span class="stat-label">Pending Tasks</span>
+          <span class="stat-value">{{pending_tasks}}</span>
+        </div>
+      </div>
+
+      <!-- Stat Card 3 -->
+      <div class="stat-card">
+        <div class="stat-badge stat-badge-green">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <span class="stat-label">Completed Tasks</span>
+          <span class="stat-value">{{complete_tasks}}</span>
+        </div>
+      </div>
+
+      <!-- Stat Card 4 -->
+      <div class="stat-card">
+        <div class="stat-badge stat-badge-red">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <span class="stat-label">Overdue Tasks</span>
+          <span class="stat-value">{{overdue_tasks_count}}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Add Task Button Action -->
+    <div class="action-banner">
+      <a href="{% url 'add_task' %}" class="btn btn-primary btn-add-task">
+        <svg class="plus-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        <span>Add New Task</span>
+      </a>
+    </div>
+
+    <!-- Main Column Panels -->
+    <div class="dashboard-grid">
+
+      <!-- Left Panel: Today's Tasks -->
+      <div class="tasks-panel-left">
+        <div class="panel-header">
+          <h2 class="panel-title">Today's Tasks</h2>
+          <span class="panel-badge">Active</span>
+        </div>
+
+        <div class="task-cards-list">
+          <!-- Task 1: DSA Practice -->
+          {% for task in todays_tasks %}
+          <div class="task-card">
+            <div class="task-card-main">
+              <div class="task-badge-icon doc-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+              </div>
+              <div class="task-body">
+                <div class="task-meta">
+                  <h3 class="task-name">{{task.title}}</h3>
+                  <span class="priority-tag tag-high">{{task.priority}}</span>
+                </div>
+                <div class="task-time-schedule">
+                  <svg class="time-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                  <span>Today - {{task.due_time}}</span>
+                </div>
+              </div>
+            </div>
+            <div class="task-card-actions">
+              <a href="{% url 'edit_task' task.id %}" class="btn btn-card-edit">Edit</a>
+              <!-- <button class="btn btn-card-edit">Edit</button> -->
+              
+              <a href="{% url 'complete_task' task.id %}" class="btn btn-card-complete">
+                Complete
+              </a>
+              <!-- <button class="btn btn-card-complete">Complete</button> -->
+            </div>
+          </div>
+          {% empty %}
+          <div class="task-card">
+            <div class="task-body">
+              <h3 class="task-name">
+                No tasks for today 🎉
+              </h3>
+            </div>
+          </div>
+          {% endfor %}
+
+        </div>
+      </div>
+
+      <!-- Right Panel: Sidebars -->
+      <div class="tasks-panel-right">
+
+        <!-- Upcoming Tasks -->
+        <div class="sidebar-card upcoming-card">
+          <h3 class="sidebar-title">Upcoming Tasks</h3>
+
+
+          <ul class="upcoming-list">
+            {% for task in upcoming_tasks %}
+            <li class="upcoming-item">
+              <div class="upcoming-indicator"></div>
+              <div class="upcoming-details">
+                <span class="upcoming-name">{{task.title}}</span>
+                <span class="upcoming-time">Tomorrow {{task.due_time}}</span>
+              </div>
+            </li>
+            {% empty %}
+            <div class="task-card">
+              <div class="task-body">
+                <h3 class="task-name">
+                  No upcoming tasks available !
+                </h3>
+              </div>
+            </div>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <!-- Overdue Tasks Warning -->
+        <div class="sidebar-card overdue-card">
+          <h3 class="sidebar-title color-danger">Overdue Tasks</h3>
+          <div class="overdue-item-box">
+            <div class="overdue-main">
+              <div class="overdue-danger-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+              </div>
+
+              {% for task in overdue_tasks %}
+              <div class="overdue-body">
+                <h4 class="overdue-name">{{task.title}}</h4>
+                <div class="overdue-due-text">
+                  <svg class="warning-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <polyline points="12 12 16 14"></polyline>
+                  </svg>
+                  <span>{{task.due_date}}</span>
+                </div>
+                <a href="{% url 'complete_task' task.id %}" class="btn btn-danger-action">
+              Complete Now
+            </a>
+              </div>
+              {% empty %}
+              <div class="task-card">
+                <div class="task-body">
+                  <h3 class="task-name">
+                    No Overdue tasks available 🎉
+                  </h3>
+                </div>
+              </div>
+              
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</main>
+{% endblock content %}
+
+
+{% block script %}
+<!-- Native Sticky Header & Mobile Drawer Scripts -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggle = document.getElementById('mobile-toggle');
+    const navLinks = document.getElementById('nav-links');
+
+    toggle.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      toggle.classList.toggle('active');
+    });
+
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 20) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+  });
+</script>
+</body>
+
+</html>
+{% endblock script %}

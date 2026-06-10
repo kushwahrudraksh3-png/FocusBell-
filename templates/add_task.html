@@ -1,0 +1,270 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block link %}
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="{% static 'css/add_task.css' %}">
+  {% endblock link %}
+
+
+  {% block content %}
+  <main class="add-main">
+    <div class="container add-container">
+      
+      <!-- Page Header -->
+      <section class="page-header-card">
+        <h1 class="page-main-title">Create New Task</h1>
+        <p class="page-sub-headline">Add a task and let FocusBell remind you when it's time to complete it.</p>
+      </section>
+
+      <!-- Main Columns Grid Layout -->
+      <div class="add-grid">
+        
+        <!-- Left Side: Task Form -->
+        <div class="add-left-column">
+          <div class="add-card form-wrapper-card">
+            
+            <form action="#" method="POST" class="task-add-form">
+              {% csrf_token %}
+              <!-- Title Input -->
+              <div class="form-group">
+                <label for="task_title" class="field-label">Task Title</label>
+                <input type="text" id="task_title" name="title" class="form-input" placeholder="Enter task title" required>
+              </div>
+
+              <!-- Description Input -->
+              <div class="form-group">
+                <label for="task_description" class="field-label">Description</label>
+                <textarea id="task_description" name="description" class="form-textarea" rows="4" placeholder="Enter task description" required></textarea>
+              </div>
+
+              <!-- Priority Selection -->
+              <div class="form-group">
+                <label for="task_priority" class="field-label">Priority</label>
+                <div class="select-wrapper">
+                  <select id="task_priority" name="priority" class="styled-select">
+                    <option value="low">Low</option>
+                    <option value="high" selected>High</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Due Date & Due Time inputs (Grid Row) -->
+              <div class="form-row-grid">
+                
+                <!-- Due Date -->
+                <div class="form-group">
+                  <label for="task_due_date" class="field-label">Due Date</label>
+                  <input type="date" id="task_due_date" name="due_date" class="form-input" required>
+                </div>
+
+                <!-- Due Time -->
+                <div class="form-group">
+                  <label for="task_due_time" class="field-label">Due Time</label>
+                  <input type="time" id="task_due_time" name="due_time" class="form-input" required>
+                </div>
+
+              </div>
+
+              <!-- Sub-header: Reminder Settings -->
+              <div class="settings-divider">
+                <h3 class="divider-title">Reminder Settings</h3>
+              </div>
+
+              <!-- Reminder Snooze & iOS Alarm Switch Toggle -->
+              <div class="form-row-grid grid-align-center">
+                
+                <!-- Reminder Snooze Dropdown -->
+                <div class="form-group">
+                  <label for="reminder_before" class="field-label">Reminder Before</label>
+                  <div class="select-wrapper">
+                    <select id="reminder_before" name="reminder_before" class="styled-select">
+                      <option value="0" {% if task.reminder_before == 0 %}selected{% endif %}>At Exact Time</option>
+                      <option value="5" {% if task.reminder_before == 5 %}selected{% endif %}>5 Minutes Before</option>
+                      <option value="10" {% if task.reminder_before == 10 %}selected{% endif %}>10 Minut10es Before</option>
+                      <option value="15" {% if task.reminder_before == 15 %}selected{% endif %}>15 Minut10es Before</option>
+                      <option value="20" {% if task.reminder_before == 20 %}selected{% endif %}>20 Minut10es Before</option>
+                      <option value="30" {% if task.reminder_before == 30 %}selected{% endif %}>30 Minut10es Before</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Custom iOS Switch Toggle -->
+                <div class="form-group toggle-group-box">
+                  <span class="field-label">Enable Alarm</span>
+                  <div class="toggle-switch-wrapper">
+                    <label class="ios-switch-toggle">
+                      <input type="checkbox" id="alarm_toggle" name="alarm_enabled" checked>
+                      <span class="toggle-slider"></span>
+                    </label>
+                    <span class="toggle-status-indicator" id="toggle_status_text">ON</span>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Form Actions Bottom Bar row -->
+              <div class="form-actions-bottom-row">
+                <button type="submit" class="btn btn-primary btn-submit-save">Save Task</button>
+                <a href="{% url "dashboard" %}" class="btn btn-outline btn-cancel-add">Cancel</a>
+              </div>
+
+            </form>
+
+          </div>
+        </div>
+
+        <!-- Right Side: Task Preview Widget Card -->
+        <div class="add-right-column">
+          <div class="edit-card preview-card-wrapper">
+            <h3 class="preview-title">Live Preview Card</h3>
+            
+            <div class="mock-task-preview border-top-high">
+              <div class="preview-header">
+                <div class="preview-badge icon-books">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                  </svg>
+                </div>
+                <span class="preview-task-headline" id="preview_title_text">DSA Practice</span>
+              </div>
+
+              <div class="preview-details-list">
+                
+                <!-- Due Date & Due Time combined preview row -->
+                <div class="preview-detail-row">
+                  <span class="detail-label">Date:</span>
+                  <span class="detail-value" id="preview_date_text">Today - 7:00 PM</span>
+                </div>
+
+                <!-- Priority -->
+                <div class="preview-detail-row">
+                  <span class="detail-label">Priority:</span>
+                  <span class="detail-value text-high-priority" id="preview_priority_text">High</span>
+                </div>
+
+                <!-- Reminder -->
+                <div class="preview-detail-row">
+                  <span class="detail-label">Reminder:</span>
+                  <span class="detail-value" id="preview_reminder_text">10 Minutes Before</span>
+                </div>
+
+                <!-- Alarm status -->
+                <div class="preview-detail-row">
+                  <span class="detail-label">Alarm:</span>
+                  <span class="detail-value text-alarm-status" id="preview_alarm_text">Enabled</span>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+  {% endblock content %}
+
+{% block script %}
+  <!-- Drawer Toggle & Live Preview Sync Scripts -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Hamburger drawer logic
+      const toggle = document.getElementById('mobile-toggle');
+      const navLinks = document.getElementById('nav-links');
+      
+      toggle.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+        toggle.classList.toggle('active');
+      });
+
+      // Realtime live preview updates
+      const titleInput = document.getElementById('task_title');
+      const prioritySelect = document.getElementById('task_priority');
+      const dateInput = document.getElementById('task_due_date');
+      const timeInput = document.getElementById('task_due_time');
+      const reminderSelect = document.getElementById('reminder_before');
+      const alarmCheckbox = document.getElementById('alarm_toggle');
+      
+      const previewTitle = document.getElementById('preview_title_text');
+      const previewDate = document.getElementById('preview_date_text');
+      const previewPriority = document.getElementById('preview_priority_text');
+      const previewReminder = document.getElementById('preview_reminder_text');
+      const previewAlarm = document.getElementById('preview_alarm_text');
+      const toggleStatusText = document.getElementById('toggle_status_text');
+
+      function updatePreview() {
+        // Sync Title
+        previewTitle.textContent = titleInput.value || 'DSA Practice';
+
+        // Sync Combined Date & Time Row
+        let formattedDate = 'Today';
+        let formattedTime = '7:00 PM';
+
+        if (dateInput.value) {
+          const dateObj = new Date(dateInput.value);
+          const options = { day: 'numeric', month: 'long', year: 'numeric' };
+          formattedDate = dateObj.toLocaleDateString('en-US', options);
+        }
+        
+        if (timeInput.value) {
+          const [hours, minutes] = timeInput.value.split(':');
+          const hr = parseInt(hours);
+          const ampm = hr >= 12 ? 'PM' : 'AM';
+          const hr12 = hr % 12 || 12;
+          formattedTime = `${hr12}:${minutes} ${ampm}`;
+        }
+        
+        // Show Combined format: Date - Time
+        if (dateInput.value || timeInput.value) {
+          previewDate.textContent = `${formattedDate} - ${formattedTime}`;
+        } else {
+          previewDate.textContent = 'Today - 7:00 PM';
+        }
+
+        // Sync Priority
+        const priority = prioritySelect.value;
+        previewPriority.textContent = priority;
+        previewPriority.className = `detail-value text-${priority.toLowerCase()}-priority`;
+
+        // Sync Accent Border High / Medium / Low
+        const previewCard = document.querySelector('.mock-task-preview');
+        previewCard.className = `mock-task-preview border-top-${priority.toLowerCase()}`;
+
+        // Sync Reminder
+        const reminderVal = reminderSelect.value;
+        const reminderOptions = {
+          '0': 'At Exact Time',
+          '5': '5 Minutes Before',
+          '10': '10 Minutes Before',
+          '15': '15 Minutes Before',
+          '30': '30 Minutes Before',
+          '60': '1 Hour Before'
+        };
+        previewReminder.textContent = reminderOptions[reminderVal] || '10 Minutes Before';
+
+        // Sync Alarm Toggle
+        const isAlarmOn = alarmCheckbox.checked;
+        previewAlarm.textContent = isAlarmOn ? 'Enabled' : 'Disabled';
+        toggleStatusText.textContent = isAlarmOn ? 'ON' : 'OFF';
+        previewAlarm.className = isAlarmOn ? 'detail-value text-alarm-status' : 'detail-value text-alarm-off';
+      }
+
+      // Add event listeners
+      titleInput.addEventListener('input', updatePreview);
+      prioritySelect.addEventListener('change', updatePreview);
+      dateInput.addEventListener('change', updatePreview);
+      timeInput.addEventListener('change', updatePreview);
+      reminderSelect.addEventListener('change', updatePreview);
+      alarmCheckbox.addEventListener('change', updatePreview);
+
+      // Run once at load
+      updatePreview();
+    });
+  </script>
+</body>
+</html>
+{% endblock script %}

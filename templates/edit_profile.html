@@ -1,0 +1,258 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block link %}
+<!-- Custom Stylesheet -->
+
+<link rel="stylesheet" href="{% static 'css/edit_profile.css' %}">
+
+{% endblock link %}
+
+
+{% block content %}
+
+<main class="edit-main">
+  <div class="container edit-container">
+
+    <!-- Page Header -->
+    <section class="page-header-card">
+      <h1 class="page-main-title">Edit Profile</h1>
+      <p class="page-sub-headline">Manage your account information and personal details.</p>
+    </section>
+
+    <!-- Main Columns Grid Layout -->
+    <div class="edit-grid">
+
+      <!-- Left Side: Edit Profile Form -->
+      <div class="edit-left-column">
+        <div class="edit-card form-wrapper-card">
+
+          <form action="#" method="POST" enctype="multipart/form-data" class="profile-edit-form">
+            {% csrf_token %}
+            <!-- Profile Picture Upload Area -->
+            <div class="form-group upload-section-box">
+              <span class="field-label">Profile Picture</span>
+              <div class="uploader-flex-wrapper">
+                <div class="uploader-avatar-preview">
+                  {% if profile.profile_image %}
+                  <img src="{{ profile.profile_image.url }}" alt="Profile Preview" class="upload-preview-img"
+                    id="uploader_avatar_image">
+                  {% else %}
+                  <div class="uploader-avatar-placeholder" id="uploader_avatar_placeholder">
+                    <span>{{ request.user.username|first|upper }}</span>
+                  </div>
+                  {% endif %}
+                  <div class="uploader-avatar-placeholder hidden" id="uploader_avatar_placeholder">
+                    <span>R</span>
+                  </div>
+                </div>
+                <div class="uploader-controls">
+                  <label for="profile_picture" class="btn btn-outline btn-upload-photo">
+                    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="17 8 12 3 7 8"></polyline>
+                      <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <span>Choose New Photo</span>
+                  </label>
+                  <input type="file" id="profile_picture" name="profile_picture" accept="image/*"
+                    class="hidden-file-input">
+                  <p class="upload-specs-text">JPG, PNG or WEBP. Max size of 800K.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Username Input -->
+            <div class="form-group">
+              <label for="user_username" class="field-label">Username</label>
+              <input type="text" id="user_username" name="username" class="form-input" value="{{request.user.username}}"
+                required>
+            </div>
+
+            <!-- First Name & Last Name inputs (Grid Row) -->
+            <div class="form-row-grid">
+
+              <!-- First Name -->
+              <div class="form-group">
+                <label for="user_first_name" class="field-label">First Name</label>
+                <input type="text" id="user_first_name" name="first_name" class="form-input" value="{{request.user.first_name}}" required>
+              </div>
+
+              <!-- Last Name -->
+              <div class="form-group">
+                <label for="user_last_name" class="field-label">Last Name</label>
+                <input type="text" id="user_last_name" name="last_name" class="form-input" value="{{request.user.last_name}}" required>
+              </div>
+
+            </div>
+
+            <!-- Email Address & Phone Number inputs (Grid Row) -->
+            <div class="form-row-grid">
+
+              <!-- Email Address -->
+              <div class="form-group">
+                <label for="user_email" class="field-label">Email Address</label>
+                <input type="email" id="user_email" name="email" class="form-input" value="{{request.user.email}}"
+                  required>
+              </div>
+            </div>
+
+            <!-- Form Actions Bottom Bar row -->
+            <div class="form-actions-bottom-row">
+              <button type="submit" class="btn btn-primary btn-submit-save">Save Changes</button>
+              <a href="profile.html" class="btn btn-outline btn-cancel-edit">Cancel</a>
+            </div>
+
+          </form>
+
+        </div>
+      </div>
+
+      <!-- Right Side: Profile Preview Widget Card -->
+      <div class="edit-right-column">
+        <div class="edit-card preview-card-wrapper">
+          <h3 class="preview-title">Profile Preview Card</h3>
+
+          <div class="mock-profile-preview-card">
+
+            <!-- Circular Avatar frame -->
+            <div class="preview-avatar-center-wrapper">
+              <div class="preview-circular-avatar-frame">
+                {% if profile.profile_image %}
+                <img src="{{ profile.profile_image.url }}" alt="Avatar Preview" class="preview-avatar-img"
+                  id="preview_avatar_image">
+                {% else %}
+                <div class="preview-avatar-placeholder" id="preview_avatar_placeholder">
+                  <span>{{ request.user.username|first|upper }}</span>
+                </div>
+                {% endif %}
+                <div class="preview-avatar-placeholder hidden" id="preview_avatar_placeholder">
+                  <span>R</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Username & Email headers -->
+            <div class="preview-user-details-header">
+              <h3 class="preview-user-fullname" id="preview_fullname_text">Rudraksh Kushwah</h3>
+              <span class="preview-user-username" id="preview_username_text">@rudraksh_kushwah</span>
+              <span class="preview-user-email" id="preview_email_text">rudraksh@focusbell.com</span>
+            </div>
+
+            <!-- Details Divider and stats -->
+            <div class="preview-divider"></div>
+
+            <div class="preview-stats-list">
+
+              <!-- Member Since -->
+              <div class="preview-stat-row">
+                <span class="stat-label">Member Since:</span>
+                <span class="stat-value">May 2026</span>
+              </div>
+
+              <!-- Total Tasks -->
+              <div class="preview-stat-row">
+                <span class="stat-label">Total Tasks:</span>
+                <span class="stat-value text-blue-stat">{{total_tasks}}</span>
+              </div>
+
+              <!-- Completed Tasks -->
+              <div class="preview-stat-row">
+                <span class="stat-label">Completed Tasks:</span>
+                <span class="stat-value text-green-stat">{{completed_tasks}}</span>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</main>
+
+{% endblock content %}
+
+
+{% block script %}
+
+<!-- Drawer Toggle & Live Preview Sync Scripts -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Hamburger drawer logic
+    const toggle = document.getElementById('mobile-toggle');
+    const navLinks = document.getElementById('nav-links');
+
+    toggle.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      toggle.classList.toggle('active');
+    });
+
+    // Realtime live preview updates
+    const usernameInput = document.getElementById('user_username');
+    const firstNameInput = document.getElementById('user_first_name');
+    const lastNameInput = document.getElementById('user_last_name');
+    const emailInput = document.getElementById('user_email');
+    const fileInput = document.getElementById('profile_picture');
+
+    const previewFullname = document.getElementById('preview_fullname_text');
+    const previewUsername = document.getElementById('preview_username_text');
+    const previewEmail = document.getElementById('preview_email_text');
+    const uploaderAvatarImg = document.getElementById('uploader_avatar_image');
+    const previewAvatarImg = document.getElementById('preview_avatar_image');
+
+    const uploaderPlaceholder = document.getElementById('uploader_avatar_placeholder');
+    const previewPlaceholder = document.getElementById('preview_avatar_placeholder');
+
+    function updatePreview() {
+      // Sync Full Name
+      const first = firstNameInput.value.trim();
+      const last = lastNameInput.value.trim();
+      previewFullname.textContent = `${first} ${last}`.trim() || 'Rudraksh Kushwah';
+
+      // Sync Username
+      const username = usernameInput.value.trim();
+      previewUsername.textContent = username ? `@${username}` : '@rudraksh_kushwah';
+
+      // Sync Email
+      previewEmail.textContent = emailInput.value.trim() || 'rudraksh@focusbell.com';
+    }
+
+    // Add event listeners
+    usernameInput.addEventListener('input', updatePreview);
+    firstNameInput.addEventListener('input', updatePreview);
+    lastNameInput.addEventListener('input', updatePreview);
+    emailInput.addEventListener('input', updatePreview);
+
+    // Photo upload file selector reader preview sync
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          // Update preview frames
+          uploaderAvatarImg.src = event.target.result;
+          previewAvatarImg.src = event.target.result;
+
+          // Ensure showing image and hiding placeholder
+          uploaderAvatarImg.classList.remove('hidden');
+          previewAvatarImg.classList.remove('hidden');
+          uploaderPlaceholder.classList.add('hidden');
+          previewPlaceholder.classList.add('hidden');
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Run once at load
+    updatePreview();
+  });
+</script>
+</body>
+
+</html>
+
+{% endblock script %}

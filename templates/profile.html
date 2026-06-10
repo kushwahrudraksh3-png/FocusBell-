@@ -1,0 +1,306 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block link %}
+<!-- Custom Stylesheet -->
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock link %}
+
+{% block content %}
+<main class="profile-main">
+  <div class="container profile-container">
+
+    <!-- Page Title -->
+    <h1 class="page-main-title">My Profile</h1>
+
+    <!-- Profile Workspace Two-Column Grid -->
+    <div class="profile-grid">
+
+      <!-- Left Column: Primary Details & Stats -->
+      <div class="profile-left-column">
+
+        <!-- Card 1: Profile Header -->
+        <div class="profile-card header-info-card">
+          <div class="avatar-wrapper">
+            {% if profile.profile_image %}
+            <img src="{{ profile.profile_image.url }}" alt="Profile" class="profile-image-avatar">
+            {% else %}
+            <div class="profile-avatar-fallback">
+              {{ request.user.username|first|upper }}
+            </div>
+            {% endif %}
+          </div>
+          <div class="header-details">
+            <h2 class="profile-fullname">{{request.user.first_name}}{{request.user.last_name}}</h2>
+            <span class="profile-email">{{request.user.email}}</span>
+            <span class="profile-join-date">{{ request.user.date_joined|date:"F Y" }}</span>
+
+            <a href="{% url 'edit_profile' %}" class="btn btn-outline btn-edit-profile-header">
+              <span>Edit Profile</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Card 2: Account Information Details -->
+        <div class="profile-card account-info-card">
+          <h3 class="card-section-title">Account Information</h3>
+          <form action="#" method="POST" class="account-form">
+            <div class="form-grid-inputs">
+              <div class="input-group">
+                <label for="username" class="input-label">Username</label>
+                <input type="text" id="username" name="username" class="form-input" value="{{request.user.username}}"
+                  required>
+              </div>
+              <div class="input-group">
+                <label for="email" class="input-label">Email Address</label>
+                <input type="email" id="email" name="email" class="form-input" value="{{request.user.email}}" required>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Card 3: Productivity Statistics -->
+        <div class="profile-card stats-metrics-card">
+          <h3 class="card-section-title">Productivity Statistics</h3>
+          <div class="profile-stats-grid">
+
+
+            <!-- Total Tasks -->
+            <div class="profile-stat-box stat-blue">
+              <div class="stat-header">
+                <span class="stat-title">Total Tasks</span>
+                <svg class="stat-box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="8" y1="6" x2="21" y2="6"></line>
+                  <line x1="8" y1="12" x2="21" y2="12"></line>
+                  <line x1="8" y1="18" x2="21" y2="18"></line>
+                </svg>
+              </div>
+              <div class="stat-count-wrapper">
+                <span class="stat-number">{{total_tasks}}</span>
+                <div class="sparkline-icon chart-blue">
+                  <span>📈</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Completed Tasks -->
+            <div class="profile-stat-box stat-green">
+              <div class="stat-header">
+                <span class="stat-title">Completed</span>
+                <svg class="stat-box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+              <div class="stat-count-wrapper">
+                <span class="stat-number">{{completed_tasks}}</span>
+                <div class="sparkline-icon chart-green">
+                  <span>📊</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pending Tasks -->
+            <div class="profile-stat-box stat-amber">
+              <div class="stat-header">
+                <span class="stat-title">Pending</span>
+                <svg class="stat-box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              </div>
+              <div class="stat-count-wrapper">
+                <span class="stat-number">{{pending_tasks}}</span>
+                <div class="sparkline-icon chart-amber">
+                  <span>⏳</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Overdue Tasks -->
+            <div class="profile-stat-box stat-red">
+              <div class="stat-header">
+                <span class="stat-title">Overdue</span>
+                <svg class="stat-box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+              </div>
+              <div class="stat-count-wrapper">
+                <span class="stat-number">{{overdue_tasks}}</span>
+                <div class="sparkline-icon chart-red">
+                  <span>⚠️</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Card 4: Recent Activity logs -->
+        <div class="profile-card recent-activity-card">
+          <h3 class="card-section-title">Recent Activity Section</h3>
+          <div class="activity-three-columns">
+
+            <!-- Col 1: Completed Tasks -->
+            <div class="activity-col">
+              <h4 class="col-title">Recent Tasks Completed</h4>
+              <ul class="activity-list">
+                {% for task in recent_completed_tasks %}
+                <li class="activity-item">
+                  <svg class="act-icon text-green" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  <span>{{task.title}}</span>
+                </li>
+                {% empty %}
+                <li class="activity-item">
+                  No completed tasks yet
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+
+            <!-- Col 2: Alarms Triggered -->
+            <div class="activity-col">
+              <h4 class="col-title">Recent Alarms Triggered</h4>
+              <ul class="activity-list">
+                <li class="activity-item">
+                  <svg class="act-icon text-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                  <span class="time-meta">No alarm history yet</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Col 3: Reminders Sent -->
+            <div class="activity-col">
+              <h4 class="col-title">Recent Reminders Sent</h4>
+              <ul class="activity-list">
+                <li class="activity-item">
+                  <svg class="act-icon text-amber" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                  </svg>
+                  <span class="reminder-meta">No reminder sent yet <span class="tag-channel">WhatsApp</span></span>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Sidebar Options -->
+      <div class="profile-right-column">
+
+        <!-- Card 1: Reminder Preferences -->
+        <div class="profile-card preferences-card">
+          <div class="pref-card-header">
+            <h3 class="card-section-title">Reminder Preferences</h3>
+            <a href="{% url 'edit_profile' %}" class="btn btn-outline btn-edit-profile-header">
+              <span>Edit Profile</span>
+            </a>
+          </div>
+
+          <form action="#" method="POST" class="preferences-form">
+            <h4 class="preference-section-label">Preferred Reminder Type:</h4>
+            <div class="preference-checkboxes">
+
+              <!-- Browser Alarm -->
+              <label class="custom-checkbox-container">
+                <input type="checkbox" name="pref_browser" checked>
+                <span class="checkbox-indicator"></span>
+                <span class="checkbox-label-text">Browser Alarm</span>
+              </label>
+
+              <!-- Email Reminder -->
+              <label class="custom-checkbox-container">
+                <input type="checkbox" name="pref_email" checked>
+                <span class="checkbox-indicator"></span>
+                <span class="checkbox-label-text">Email Reminder</span>
+              </label>
+
+              <!-- WhatsApp Reminder -->
+              <label class="custom-checkbox-container">
+                <input type="checkbox" name="pref_whatsapp" checked>
+                <span class="checkbox-indicator"></span>
+                <span class="checkbox-label-text">WhatsApp Reminder</span>
+              </label>
+
+            </div>
+
+            <!-- Dropdown Snooze Time -->
+            <div class="snooze-dropdown-group">
+              <label for="snooze_time" class="dropdown-label">Default Snooze Time:</label>
+              <div class="select-wrapper">
+                <select name="snooze_time" id="snooze_time" class="styled-select">
+                  <option value="5">5 Minutes</option>
+                  <option value="10">10 Minutes</option>
+                  <option value="15">15 Minutes</option>
+                  <option value="30">30 Minutes</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-submit-preferences">Edit Preferences</button>
+          </form>
+        </div>
+
+        <!-- Card 2: Account Settings Actions -->
+        <div class="profile-card settings-card">
+          <h3 class="card-section-title">Account Settings</h3>
+          <div class="settings-actions-stack">
+            <a href="{% url 'edit_profile' %}" class="btn btn-outline btn-settings-act">
+              Edit Profile
+            </a>
+            <a href="{% url 'change_password' %}" class="btn btn-outline btn-settings-act">
+              Change Password
+            </a>
+            <!-- <button class="btn btn-outline btn-settings-act">Change Password</button> -->
+            <a href="index.html" class="btn btn-danger-outline btn-logout-danger">Logout</a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</main>
+{% endblock content %}
+
+{% block script %} <!-- Drawer toggle scripts -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggle = document.getElementById('mobile-toggle');
+    const navLinks = document.getElementById('nav-links');
+
+    toggle.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      toggle.classList.toggle('active');
+    });
+
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 20) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+  });
+</script>
+</body>
+
+</html>
+{% endblock script %}
