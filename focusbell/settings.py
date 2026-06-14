@@ -150,3 +150,22 @@ EMAIL_USE_TLS = True
 
 EMAIL_HOST_USER = 'kushwahrudraksh3@gmail.com'
 EMAIL_HOST_PASSWORD = 'mvrf stjb fwwg kczd'
+
+
+
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+
+
+
+from celery.schedules import crontab
+
+
+CELERY_BEAT_SCHEDULE = {
+    'check-due-tasks-every-minute': {
+        'task': 'tasks.tasks.check_due_tasks',
+        'schedule': 60.0,
+    },
+}

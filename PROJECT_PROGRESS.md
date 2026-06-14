@@ -40,12 +40,10 @@
 
 ### Redis
 
-* Learn Redis Basics
 * Integrate Redis
 
 ### Celery
 
-* Learn Celery
 * Configure Celery Worker
 * Configure Celery Beat
 

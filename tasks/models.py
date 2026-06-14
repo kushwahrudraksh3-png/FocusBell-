@@ -35,6 +35,8 @@ class Task(models.Model):
     
     reminder_before = models.PositiveBigIntegerField(default=0, help_text='Reminder time in minutes before task', choices=reminder_choices)
     
+    is_reminded = models.BooleanField(default=False)
+    
     alarm_enabled = models.BooleanField(default=True)
     
     status = models.CharField(max_length=15,choices=status_choices, default='pending')

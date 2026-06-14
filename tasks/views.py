@@ -138,7 +138,7 @@ def edit_task(request, id):
         task.due_date = request.POST.get('due_date')
         task.due_time = request.POST.get('due_time')
         task.reminder_before = request.POST.get('reminder_before')
-        task.alarm_enabled = True if request.POST.get('alarm_enabled')=="ON" else False
+        task.alarm_enabled = True if request.POST.get('alarm_enabled')=="on" else False
 
         
         task.save()
