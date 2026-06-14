@@ -1,7 +1,7 @@
 from celery import shared_task
 from django.utils import timezone
 from datetime import datetime, timedelta
-
+from .whatsapp import send_whatsapp_message
 from .models import Task
 
 
@@ -23,6 +23,8 @@ def check_due_tasks():
         task_datetime = datetime.combine(task.due_date, task.due_time)
 
         reminder_time = task_datetime - timedelta(minutes=task.reminder_before)
+        
+            
 
         print("Task:", task.title)
         print("Due Time:", task.due_time)
@@ -33,6 +35,14 @@ def check_due_tasks():
         print("---------------------")
 
         if reminder_time.time().hour == current_time.hour and reminder_time.time().minute == current_time.minute:
-            print(f"Reminder: {task.title}")
+            # print(f"Reminder: {task.title}")
+            message = f"""🔔 FocusBell Reminder
+
+            Task: {task.title}
+            Time: {task.due_time}
+
+            Your task is starting soon.
+            """ 
+            send_whatsapp_message(message)
             task.is_reminded = True
             task.save()
