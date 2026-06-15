@@ -24,7 +24,7 @@
   <!-- Header / Navigation -->
   <header class="navbar" id="navbar">
     <div class="container navbar-container">
-      <a href="index.html#home" class="logo">
+      <a href="{% url 'dashboard' %}" class="logo">
         <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M18 8C18 6.4087 17.3679 4.88258 16.2426 3.75736C15.1174 2.63214 13.5913 2 12 2C10.4087 2 8.88258 2.63214 7.75736 3.75736C6.63214 4.88258 6 6.4087 6 8C6 15 3 17 3 17H21C21 17 18 15 18 8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M13.73 21C13.5239 21.3571 13.2281 21.6536 12.8716 21.8603C12.5151 22.0671 12.1084 22.1762 11.695 22.1762C11.2816 22.1762 10.8749 22.0671 10.5184 21.8603C10.1619 21.6536 9.86609 21.3571 9.66 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -43,19 +43,13 @@
 
       <!-- Nav Links -->
       <nav class="nav-links" id="nav-links">
-        <a href="{% url 'dashboard' %}" class="nav-item active">Dashboard</a>
-        <a href="{% url 'task_list' %}" class="nav-item">Tasks</a>
-        <a href="{% url 'add_task' %}" class="nav-item">Add Task</a>
+        <a href="{% url 'dashboard' %}" class="nav-item active {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">Dashboard</a>
+        <a href="{% url 'task_list' %}" class="nav-item {% if request.resolver_match.url_name == 'task_list' %}active{% endif %}">Tasks</a>
+        <a href="{% url 'add_task' %}" class="nav-item {% if request.resolver_match.url_name == 'add_task' %}active{% endif %}">Add Task</a>
         
         <!-- Utility controls -->
         <div class="nav-utilities">
-          <button class="utility-btn notification-bell" aria-label="Notifications">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M18 8C18 6.4087 17.3679 4.88258 16.2426 3.75736C15.1174 2.63214 13.5913 2 12 2C10.4087 2 8.88258 2.63214 7.75736 3.75736C6.63214 4.88258 6 6.4087 6 8C6 15 3 17 3 17H21C21 17 18 15 18 8Z"></path>
-              <path d="M13.73 21C13.5239 21.3571 13.2281 21.6536 12.8716 21.8603C12.5151 22.0671 12.1084 22.1762 11.695 22.1762C11.2816 22.1762 10.8749 22.0671 10.5184 21.8603C10.1619 21.6536 9.86609 21.3571 9.66 21"></path>
-            </svg>
-            <span class="active-badge-dot"></span>
-          </button>
+          
           <a href="{% url 'profile' %}"><div class="user-avatar" title="Rudraksh Kushwah">
             <span>{{ request.user.username|first|upper }}</span>
           </div></a>
@@ -84,10 +78,38 @@
     </div>
 </footer>
 
-  {% block script %}
-  
-  
+{% block script %}
 
-  {% endblock script %}
+{% endblock script %}
 
+<audio id="alarmSound">
+    <source src="{% static 'sounds/alarm.mp3' %}" type="audio/mpeg">
+</audio>
+
+<script>
+function checkAlarm() {
+    fetch("{% url 'check_alarm' %}")
+        .then(response => response.json())
+        .then(data => {
+
+            if (data.alarm) {
+
+                document.getElementById("alarmSound").play();
+
+                alert(
+                    "🔔 FocusBell Reminder\n\n" +
+                    "Task: " + data.title + "\n" +
+                    "Time: " + data.time
+                );
+            }
+
+        })
+        .catch(error => console.log(error));
+}
+
+setInterval(checkAlarm, 10000);
+</script>
+
+</body>
+</html>
   

@@ -44,5 +44,6 @@ def check_due_tasks():
             Your task is starting soon.
             """ 
             send_whatsapp_message(message)
+            task.alarm_pending = True
             task.is_reminded = True
             task.save()

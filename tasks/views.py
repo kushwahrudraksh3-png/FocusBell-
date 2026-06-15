@@ -7,6 +7,8 @@ from django.utils import timezone
 from . models import *
 from django.db.models import Q
 
+from django.http import JsonResponse
+
 # Create your views here.
 @login_required
 def dashboard(request):
@@ -87,13 +89,15 @@ def task_list(request):
     
     overdue_tasks = tasks.filter(user=request.user, status='pending', due_date__lt=today)
     pending_tasks = tasks.filter(user=request.user, status='pending', due_date__gte=today)
+    completed_tasks = tasks.filter(user=request.user,  status='completed')
     
     
     
     context = {
         'tasks':tasks,
         'overdue_tasks': overdue_tasks,
-        'pending_tasks': pending_tasks,             
+        'pending_tasks': pending_tasks, 
+        'completed_tasks': completed_tasks,
     }
     return render(request, 'task_list.html', context)
 
@@ -281,3 +285,29 @@ def profile(request):
     }
 
     return render(request, 'profile.html', context)
+
+
+
+
+
+@login_required
+def check_alarm(request):
+    task = Task.objects.filter(
+        user=request.user,
+        alarm_pending=True,
+        alarm_enabled=True
+    ).first()
+
+    if task:
+        task.alarm_pending = False
+        task.save()
+
+        return JsonResponse({
+            "alarm": True,
+            "title": task.title,
+            "time": str(task.due_time),
+        })
+
+    return JsonResponse({
+        "alarm": False
+    })

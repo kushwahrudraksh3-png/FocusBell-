@@ -39,6 +39,8 @@ class Task(models.Model):
     
     alarm_enabled = models.BooleanField(default=True)
     
+    alarm_pending = models.BooleanField(default=False)
+    
     status = models.CharField(max_length=15,choices=status_choices, default='pending')
     
     created_at = models.DateTimeField(auto_now_add=True)

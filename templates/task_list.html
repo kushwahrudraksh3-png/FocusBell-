@@ -154,6 +154,44 @@
         {% endfor %}
 
 
+
+        {% for task in completed_tasks %}
+        <div class="task-grid-card border-left-medium">
+          <div class="card-main-content">
+            <div class="card-top-row">
+              <div class="task-card-badge icon-folder">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                </svg>
+              </div>
+
+              <div class="badge-status-tags">
+                <span class="prio-tag tag-medium">{{ task.priority }}</span>
+                <span class="status-tag status-completed">{{ task.status }}</span>
+              </div>
+            </div>
+
+            <h3 class="task-card-title">{{ task.title }}</h3>
+
+            <div class="task-schedule-row">
+              <svg class="schedule-clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              <span class="schedule-text">{{ task.due_date }} - {{ task.due_time }}</span>
+            </div>
+          </div>
+
+          <div class="card-action-buttons">
+            <a href="{% url 'edit_task' task.id %}" class="btn btn-outline btn-act-edit">Edit</a>
+            <a href="{% url 'delete_task' task.id %}" class="btn btn-danger-outline btn-act-delete">Delete</a>
+          </div>
+        </div>
+        {% endfor %}
+
+
         <!-- Task Card 3: Database Assignment (Red Warning Style) -->
         {% for task in overdue_tasks %}
         <div class="task-grid-card border-left-red overdue-warning-style">
@@ -222,7 +260,4 @@
     });
   });
 </script>
-</body>
-
-</html>
 {% endblock script %}
